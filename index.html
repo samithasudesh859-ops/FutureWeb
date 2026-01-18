@@ -1,43 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Next Web Solutions | Interstellar Experience</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Next Web Solutions | Black Hole</title>
     <style>
-        /* මුළු screen එකම පාවිච්චි කරන්න මේ ටික ඕනේ */
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden; 
-            background-color: #000; /* කළු පසුබිම අනිවාර්යයි */
-        }
-
-        canvas { 
-            display: block; 
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* Scroll කරන්න පුළුවන් බව Browser එකට පෙන්වන්න හදන බොරු උස (Fake height) */
-        /* මේක නැතිව wheel event එක වැඩ කළාට scroll bar එක එන්නේ නැහැ */
-        .scroll-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 500vh; /* Scroll length එක වැඩි කරන්න ඕනේ නම් මේක වැඩි කරන්න */
-            pointer-events: none; /* මේක Canvas එකට බාධාවක් වෙන්න නොදී තියන්න */
-        }
+      body { margin: 0; overflow: hidden; background: #000; }
+      canvas { display: block; }
     </style>
-</head>
-<body>
-
-    <div class="scroll-container"></div>
-
+  </head>
+  <body>
     <script type="module" src="/src/main.js"></script>
-    
-</body>
+  </body>
 </html>
