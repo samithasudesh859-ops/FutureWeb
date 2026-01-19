@@ -1,96 +1,244 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body { 
+  margin: 0; 
+  padding: 0;
+  overflow: hidden; 
+  background-color: #000;
+  font-family: 'Syncopate', sans-serif; 
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+.canvas-container {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #0a0a0f 0%, #000 100%);
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.content-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
+  color: white;
+  pointer-events: none;
+  width: 100%;
+  z-index: 10;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
-}
-
-.card {
-  padding: 2em;
+.main-title {
+  font-size: clamp(2.5rem, 10vw, 7rem);
+  font-weight: 700;
+  letter-spacing: 20px;
+  background: linear-gradient(to bottom, #fff 30%, #444 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  text-transform: uppercase;
+  filter: drop-shadow(0 0 20px rgba(255,255,255,0.1));
 }
 
-.read-the-docs {
-  color: #888;
+.sub-title {
+  font-size: 0.6rem;
+  letter-spacing: 8px;
+  opacity: 0.4;
+  margin-top: 20px;
+  text-transform: uppercase;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.btn-group {
+  margin-top: 50px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.premium-btn {
+  padding: 15px 40px;
+  background: white;
+  border: 1px solid white;
+  color: black;
+  letter-spacing: 3px;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  pointer-events: all;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Syncopate', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.premium-btn.secondary {
+  background: transparent;
+  color: white;
+}
+
+.premium-btn:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 10px 40px rgba(255,255,255,0.2);
+}
+
+/* පැනල් එක පොඩි කරලා පැත්තකට ගමු */
+.ai-panel {
+  position: fixed;
+  right: 20px; /* දාරයේ ඉදන් පොඩි ඉඩක් */
+  bottom: 20px;
+  width: 320px; /* සයිස් එක අඩු කළා */
+  height: 450px; /* උස අඩු කළා */
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(15px); /* බ්ලර් එක පොඩ්ඩක් අඩු කළා */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px; /* රවුම් දාර */
+  transform: translateX(400px); /* මුලින් හංගලා */
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.ai-panel.open {
+  transform: translateX(0); /* ඕපන් වෙද්දී ලස්සනට ඇතුළට එනවා */
+}
+
+.ai-header {
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.ai-chat-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.ai-msg {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 12px;
+  border-radius: 12px;
+  color: #eee;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ai-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+}
+.intro-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: black;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  z-index: 2000;
+  text-align: center;
+  padding: 20px;
+}
+
+.intro-title {
+  font-size: clamp(2rem, 8vw, 6rem);
+  letter-spacing: 15px;
+  color: white;
+  margin: 10px 0;
+  background: linear-gradient(to bottom, #fff, #444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.intro-sub {
+  font-size: 0.7rem;
+  letter-spacing: 10px;
+  color: #666;
+}
+
+.intro-desc {
+  max-width: 500px;
+  color: #444;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+
+.enter-btn {
+  padding: 20px 50px;
+  background: transparent;
+  border: 1px solid #333;
+  color: white;
+  letter-spacing: 5px;
+  cursor: pointer;
+  transition: all 0.5s;
+  font-family: 'Syncopate', sans-serif;
+  font-size: 0.6rem;
+}
+
+.enter-btn:hover {
+  background: white;
+  color: black;
+  box-shadow: 0 0 30px rgba(255,255,255,0.2);
+}
+.ai-chat-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 320px;
+  padding: 10px;
+}
+
+.ai-msg {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  max-width: 85%;
+}
+
+.ai-msg.user {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ai-msg.ai {
+  align-self: flex-start;
+  background: rgba(0, 255, 255, 0.05);
+  color: #0ff;
+  border-left: 3px solid #0ff;
+}
+
+.ai-input-wrapper {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.send-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 0 15px;
 }
