@@ -11,39 +11,32 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
 const handleSend = async () => {
-    if (!input.trim()) return;
-    
-    rippleSnd.play(); 
-    const userMsg = { role: 'user', text: input };
-    
-    // 1. User මැසේජ් එක ඇඩ් කරනවා
-    setMessages(prev => [...prev, userMsg]);
-    
-    const userInput = input.toLowerCase();
-    setInput("");
-    setIsTyping(true);
+  if (!input.trim()) return;
+  
+  rippleSnd.play(); 
+  const userMsg = { role: 'user', text: input };
+  setMessages(prev => [...prev, userMsg]);
+  const userInput = input.toLowerCase();
+  setInput("");
+  setIsTyping(true);
 
-    // 🕒 Realistic Delay (අකුරු ගණන අනුව තත්පර 0.8 - 2 අතර කාලයක් ගනියි)
-    const processTime = Math.min(Math.max(userInput.length * 20, 800), 2000);
+  // 🕒 "Thinking" effect - තත්පර 1.5ක් පරක්කු කරනවා
+  setTimeout(() => {
+    let foundKey = "default";
 
-    setTimeout(() => {
-      let finalResponse = "Query analyzed. While my current data-stream doesn't have a direct match for that specific inquiry, our elite human developers certainly do. Please redirect this query to Samitha: https://wa.me/94756724255";
-
-      // 🔍 Matching Logic
-      for (const category in ELITE_DATA) {
-        const match = ELITE_DATA[category].keywords.some(word => userInput.includes(word));
-        if (match) {
-          finalResponse = ELITE_DATA[category].response;
-          break;
-        }
+    // සරලව වචන ගැලපෙනවද බලන logic එක
+    for (const [key, keywords] of Object.entries(KNOWLEDGE_BASE)) {
+      if (keywords.some(word => userInput.includes(word))) {
+        foundKey = key;
+        break;
       }
+    }
 
-      // 2. AI මැසේජ් එක ඇඩ් කරනවා (prev පාවිච්චි කිරීම අනිවාර්යයි)
-      setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
-      setIsTyping(false);
-    }, processTime); 
-  };
-
+    const aiResponse = { role: 'ai', text: RESPONSES[foundKey] };
+    setMessages(prev => [...prev, aiResponse]);
+    setIsTyping(false);
+  }, 1500); 
+};
 
 
 // 🎥 කැමරාව මවුස් එකත් එක්ක ඇලවෙන රිග් එක
