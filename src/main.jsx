@@ -154,10 +154,10 @@ function App() {
     setIsAiOpen(true);
   };
 
-  const handleSend = async () => {
+const handleSend = async () => {
     if (!input.trim()) return;
     
-    rippleSnd.play(); // Send කරද්දී සද්දේ
+    rippleSnd.play(); 
     const userMsg = { role: 'user', text: input };
     setMessages(prev => [...prev, userMsg]);
     const currentInput = input;
@@ -165,13 +165,18 @@ function App() {
     setIsTyping(true);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      // 🔑 Direct API Key usage for testing
+      const genAI = new GoogleGenerativeAI("AIzaSyDqKJt8RduZvC7-7Ao6uwJp1tjAXoBJKc8");
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
       const prompt = `${ELITE_PROMPT}\nUser: ${currentInput}`;
       const result = await model.generateContent(prompt);
-      const aiText = result.response.text();
+      const response = await result.response;
+      const aiText = response.text();
+      
       setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
     } catch (error) {
-      console.error("AI Error:", error);
+      console.error("AI Error Details:", error);
       setMessages(prev => [...prev, { role: 'ai', text: "Neural link disrupted. Please try again." }]);
     }
     setIsTyping(false);
