@@ -10,31 +10,34 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // --- [පරණ API Key සහ genAI පේළි මකන්න] ---
 
 // 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
-const ELITE_DATA = {
-  greetings: {
-    keywords: ["hi", "hello", "hey", "greetings", "good morning", "good evening"],
-    response: "Greetings. Welcome to Next Web Solutions. I am the Elite Assistant. How can I assist you in navigating the future of the web today?"
-  },
-  developers: {
-    keywords: ["samitha", "ravidu", "developer", "creator", "who made", "owner"],
-    response: "This futuristic ecosystem was architected by our Lead Developer, Samitha Sudesh, and Ravidu. You can connect with Samitha here: https://wa.me/94756724255 or Ravidu here: https://wa.me/94762169837"
-  },
-  company: {
-    keywords: ["company", "next web solutions", "next web"],
-    response: "Next Web Solutions is a frontier digital agency dedicated to crafting the web experience of 2036, today."
-  },
-  services: {
-    keywords: ["services", "work", "do you do", "3d", "erp", "crm", "portfolio", "ecommerce"],
-    response: "We specialize in high-end 3D Websites, ERP/CRM Systems, Premium Portfolios, and Next-Gen Ecommerce solutions using WebGPU and Three.js."
-  },
-  vision: {
-    keywords: ["vision", "future", "goal"],
-    response: "Our vision is clear: Providing the web experience of 10 years into the future, today. This is where the future starts."
-  },
-  tech: {
-    keywords: ["tech", "stack", "language", "coding", "react", "laravel"],
-    response: "Our elite tech stack includes HTML, CSS, JS, PHP, Laravel, Next.js, React.js, WebGPU, and Three.js for immersive 3D experiences."
-  }
+const handleSend = async () => {
+  if (!input.trim()) return;
+  
+  rippleSnd.play(); 
+  const userMsg = { role: 'user', text: input };
+  setMessages(prev => [...prev, userMsg]);
+  const userInput = input.toLowerCase();
+  setInput("");
+  setIsTyping(true);
+
+  // යූසර්ගේ මැසේජ් එකේ දිග අනුව වෙලාව වෙනස් වෙනවා (Realistic effect)
+  const processTime = Math.min(Math.max(userInput.length * 20, 800), 2000);
+
+  setTimeout(() => {
+    let finalResponse = "Query analyzed. While my current data-stream doesn't have a direct match for that specific inquiry, our elite human developers certainly do. Please redirect this query to Samitha: https://wa.me/94756724255";
+
+    // Matching Logic with priority
+    for (const category in ELITE_DATA) {
+      const match = ELITE_DATA[category].keywords.some(word => userInput.includes(word));
+      if (match) {
+        finalResponse = ELITE_DATA[category].response;
+        break;
+      }
+    }
+
+    setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
+    setIsTyping(false);
+  }, processTime); 
 };
 
 
@@ -171,13 +174,13 @@ const handleSend = async () => {
   setInput("");
   setIsTyping(true);
 
-  // 🕒 Simulation of "Thinking" process (1.2 seconds)
   setTimeout(() => {
-    let finalResponse = "Neural link stable. However, I couldn't find a direct match for your query in my elite data-stream. Please contact Samitha for detailed inquiries: https://wa.me/94756724255";
+    let finalResponse = "Query analyzed. While I don't have a direct data-match for that specific request, Next Web Solutions can certainly handle any advanced web requirement. Would you like to discuss this with Lead Developer Samitha? https://wa.me/94756724255";
 
-    // Matching Logic
+    // Loop through all categories to find a keyword match
     for (const category in ELITE_DATA) {
-      if (ELITE_DATA[category].keywords.some(word => userInput.includes(word))) {
+      const match = ELITE_DATA[category].keywords.some(word => userInput.includes(word));
+      if (match) {
         finalResponse = ELITE_DATA[category].response;
         break;
       }
@@ -185,7 +188,7 @@ const handleSend = async () => {
 
     setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
     setIsTyping(false);
-  }, 1200); 
+  }, 1000); 
 };
 
   return (
