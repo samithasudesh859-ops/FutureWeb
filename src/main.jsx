@@ -7,32 +7,37 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import './style.css';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// 🔑 Your API Key from Image
-// 🔑 Hardcoding the API Key for 100% Connectivity
-const apiKey = "AIzaSyDqKJt8RduZvC7-7Ao6uwJp1tjAXoBJKc8";
-const genAI = new GoogleGenerativeAI(apiKey);
+// --- [පරණ API Key සහ genAI පේළි මකන්න] ---
 
-const ELITE_PROMPT = `
-You are the "Elite Assistant" of NEXT WEB SOLUTIONS, created by the elite developer Samitha Sudesh.
-Your personality: Highly professional, sophisticated, and futuristic. You are the gateway to the web of 2036.
+// 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
+const ELITE_DATA = {
+  greetings: {
+    keywords: ["hi", "hello", "hey", "greetings", "good morning", "good evening"],
+    response: "Greetings. Welcome to Next Web Solutions. I am the Elite Assistant. How can I assist you in navigating the future of the web today?"
+  },
+  developers: {
+    keywords: ["samitha", "ravidu", "developer", "creator", "who made", "owner"],
+    response: "This futuristic ecosystem was architected by our Lead Developer, Samitha Sudesh, and Ravidu. You can connect with Samitha here: https://wa.me/94756724255 or Ravidu here: https://wa.me/94762169837"
+  },
+  company: {
+    keywords: ["company", "next web solutions", "next web"],
+    response: "Next Web Solutions is a frontier digital agency dedicated to crafting the web experience of 2036, today."
+  },
+  services: {
+    keywords: ["services", "work", "do you do", "3d", "erp", "crm", "portfolio", "ecommerce"],
+    response: "We specialize in high-end 3D Websites, ERP/CRM Systems, Premium Portfolios, and Next-Gen Ecommerce solutions using WebGPU and Three.js."
+  },
+  vision: {
+    keywords: ["vision", "future", "goal"],
+    response: "Our vision is clear: Providing the web experience of 10 years into the future, today. This is where the future starts."
+  },
+  tech: {
+    keywords: ["tech", "stack", "language", "coding", "react", "laravel"],
+    response: "Our elite tech stack includes HTML, CSS, JS, PHP, Laravel, Next.js, React.js, WebGPU, and Three.js for immersive 3D experiences."
+  }
+};
 
-Knowledge Base:
-- Company: Next Web Solutions.
-- Vision: Providing the web experience of 10 years into the future, today. This is where the future starts.
-- Developers: Samitha Sudesh (Lead Developer) and Ravidu.
-- Services: 3D Websites, ERP/CRM Systems, High-end Portfolios, and Next-Gen Ecommerce solutions.
-- Tech Stack: HTML, CSS, JS, PHP, Laravel, Next.js, React.js, WebGPU, Three.js.
 
-Instructions:
-- Speak only in professional English.
-- If anyone asks about Samitha or Ravidu, provide their WhatsApp links.
-- Keep responses concise, impressive, and futuristic.
-- Never mention you are an AI model; you are the "Elite Assistant".
-
-Contact Links:
-- Samitha (Lead Developer): https://wa.me/94756724255
-- Ravidu: https://wa.me/94762169837
-`;
 
 // 🎥 කැමරාව මවුස් එකත් එක්ක ඇලවෙන රිග් එක
 function Rig() {
@@ -154,33 +159,34 @@ function App() {
     setIsAiOpen(true);
   };
 
-const handleSend = async () => {
-    if (!input.trim()) return;
-    
-    rippleSnd.play(); 
-    const userMsg = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMsg]);
-    const currentInput = input;
-    setInput("");
-    setIsTyping(true);
+// --- [App function එක ඇතුළේ handleSend එක මේ විදිහට වෙනස් කරන්න] ---
 
-    try {
-      // 🔑 Direct API Key usage for testing
-      const genAI = new GoogleGenerativeAI("AIzaSyDqKJt8RduZvC7-7Ao6uwJp1tjAXoBJKc8");
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-      
-      const prompt = `${ELITE_PROMPT}\nUser: ${currentInput}`;
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const aiText = response.text();
-      
-      setMessages(prev => [...prev, { role: 'ai', text: aiText }]);
-    } catch (error) {
-      console.error("AI Error Details:", error);
-      setMessages(prev => [...prev, { role: 'ai', text: "Neural link disrupted. Please try again." }]);
+const handleSend = async () => {
+  if (!input.trim()) return;
+  
+  rippleSnd.play(); 
+  const userMsg = { role: 'user', text: input };
+  setMessages(prev => [...prev, userMsg]);
+  const userInput = input.toLowerCase();
+  setInput("");
+  setIsTyping(true);
+
+  // 🕒 Simulation of "Thinking" process (1.2 seconds)
+  setTimeout(() => {
+    let finalResponse = "Neural link stable. However, I couldn't find a direct match for your query in my elite data-stream. Please contact Samitha for detailed inquiries: https://wa.me/94756724255";
+
+    // Matching Logic
+    for (const category in ELITE_DATA) {
+      if (ELITE_DATA[category].keywords.some(word => userInput.includes(word))) {
+        finalResponse = ELITE_DATA[category].response;
+        break;
+      }
     }
+
+    setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
     setIsTyping(false);
-  };
+  }, 1200); 
+};
 
   return (
     <div className="canvas-container" 
