@@ -11,32 +11,47 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
 const handleSend = async () => {
-  if (!input.trim()) return;
-  
-  rippleSnd.play(); 
-  const userMsg = { role: 'user', text: input };
-  setMessages(prev => [...prev, userMsg]);
-  const userInput = input.toLowerCase();
-  setInput("");
-  setIsTyping(true);
+    if (!input.trim()) return;
+    
+    // 🔊 Sound play
+    if (rippleSnd) rippleSnd.play().catch(e => console.log("Audio play failed"));
 
-  // 🕒 "Thinking" effect - තත්පර 1.5ක් පරක්කු කරනවා
-  setTimeout(() => {
-    let foundKey = "default";
+    const userMsg = { role: 'user', text: input };
+    setMessages(prev => [...prev, userMsg]);
+    
+    const userInput = input.toLowerCase().trim();
+    setInput("");
+    setIsTyping(true);
 
-    // සරලව වචන ගැලපෙනවද බලන logic එක
-    for (const [key, keywords] of Object.entries(KNOWLEDGE_BASE)) {
-      if (keywords.some(word => userInput.includes(word))) {
-        foundKey = key;
-        break;
+    // 🕒 Realistic Delay
+    const processTime = Math.min(Math.max(userInput.length * 20, 800), 2000);
+
+    setTimeout(() => {
+      try {
+        let finalResponse = "Query analyzed. While my current data-stream doesn't have a direct match for that specific inquiry, our elite human developers certainly do. Please redirect this query to Samitha: https://wa.me/94756724255";
+
+        // 🔍 Matching Logic - ELITE_DATA එක උඩම තියෙනවා කියලා ෂුවර් කරගන්න
+        if (typeof ELITE_DATA !== 'undefined') {
+          for (const category in ELITE_DATA) {
+            const match = ELITE_DATA[category].keywords.some(word => userInput.includes(word));
+            if (match) {
+              finalResponse = ELITE_DATA[category].response;
+              break;
+            }
+          }
+        } else {
+          console.error("ELITE_DATA is not defined!");
+        }
+
+        // ✅ Messages update and STOP typing
+        setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
+      } catch (error) {
+        console.error("Chat logic error:", error);
+      } finally {
+        setIsTyping(false); // 👈 මේක අනිවාර්යයෙන්ම වෙන්න ඕනේ "Thinking" අයින් වෙන්න
       }
-    }
-
-    const aiResponse = { role: 'ai', text: RESPONSES[foundKey] };
-    setMessages(prev => [...prev, aiResponse]);
-    setIsTyping(false);
-  }, 1500); 
-};
+    }, processTime); 
+  };
 
 
 // 🎥 කැමරාව මවුස් එකත් එක්ක ඇලවෙන රිග් එක
