@@ -8,15 +8,11 @@ import './style.css';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // 🔑 Your API Key from Image
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-if (!apiKey) console.error("API Key is missing from Environment Variables!");
-
-const genAI = new GoogleGenerativeAI(apiKey || "");
+// 🔑 Hardcoding the API Key for 100% Connectivity
+const apiKey = "AIzaSyDqKJt8RduZvC7-7Ao6uwJp1tjAXoBJKc8";
+const genAI = new GoogleGenerativeAI(apiKey);
 
 const ELITE_PROMPT = `
-You are the "Elite Assistant" of NEXT WEB SOLUTIONS...
-
-
 You are the "Elite Assistant" of NEXT WEB SOLUTIONS, created by the elite developer Samitha Sudesh.
 Your personality: Highly professional, sophisticated, and futuristic. You are the gateway to the web of 2036.
 
