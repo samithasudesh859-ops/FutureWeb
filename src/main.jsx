@@ -10,35 +10,39 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // --- [පරණ API Key සහ genAI පේළි මකන්න] ---
 
 // 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
-const handleSend = async () => {
-  if (!input.trim()) return;
-  
-  rippleSnd.play(); 
-  const userMsg = { role: 'user', text: input };
-  setMessages(prev => [...prev, userMsg]);
-  const userInput = input.toLowerCase();
-  setInput("");
-  setIsTyping(true);
+cconst handleSend = async () => {
+    if (!input.trim()) return;
+    
+    rippleSnd.play(); 
+    const userMsg = { role: 'user', text: input };
+    
+    // 1. User මැසේජ් එක ඇඩ් කරනවා
+    setMessages(prev => [...prev, userMsg]);
+    
+    const userInput = input.toLowerCase();
+    setInput("");
+    setIsTyping(true);
 
-  // යූසර්ගේ මැසේජ් එකේ දිග අනුව වෙලාව වෙනස් වෙනවා (Realistic effect)
-  const processTime = Math.min(Math.max(userInput.length * 20, 800), 2000);
+    // 🕒 Realistic Delay (අකුරු ගණන අනුව තත්පර 0.8 - 2 අතර කාලයක් ගනියි)
+    const processTime = Math.min(Math.max(userInput.length * 20, 800), 2000);
 
-  setTimeout(() => {
-    let finalResponse = "Query analyzed. While my current data-stream doesn't have a direct match for that specific inquiry, our elite human developers certainly do. Please redirect this query to Samitha: https://wa.me/94756724255";
+    setTimeout(() => {
+      let finalResponse = "Query analyzed. While my current data-stream doesn't have a direct match for that specific inquiry, our elite human developers certainly do. Please redirect this query to Samitha: https://wa.me/94756724255";
 
-    // Matching Logic with priority
-    for (const category in ELITE_DATA) {
-      const match = ELITE_DATA[category].keywords.some(word => userInput.includes(word));
-      if (match) {
-        finalResponse = ELITE_DATA[category].response;
-        break;
+      // 🔍 Matching Logic
+      for (const category in ELITE_DATA) {
+        const match = ELITE_DATA[category].keywords.some(word => userInput.includes(word));
+        if (match) {
+          finalResponse = ELITE_DATA[category].response;
+          break;
+        }
       }
-    }
 
-    setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
-    setIsTyping(false);
-  }, processTime); 
-};
+      // 2. AI මැසේජ් එක ඇඩ් කරනවා (prev පාවිච්චි කිරීම අනිවාර්යයි)
+      setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
+      setIsTyping(false);
+    }, processTime); 
+  };
 
 
 
