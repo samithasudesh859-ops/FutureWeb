@@ -10,7 +10,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // --- [පරණ API Key සහ genAI පේළි මකන්න] ---
 
 // 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
-cconst handleSend = async () => {
+const handleSend = async () => {
     if (!input.trim()) return;
     
     rippleSnd.play(); 
