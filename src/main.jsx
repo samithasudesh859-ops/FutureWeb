@@ -165,7 +165,7 @@ function App() {
     setIsTyping(true);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
       const prompt = `${ELITE_PROMPT}\nUser: ${currentInput}`;
       const result = await model.generateContent(prompt);
       const aiText = result.response.text();
