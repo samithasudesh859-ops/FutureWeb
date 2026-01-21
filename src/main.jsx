@@ -7,72 +7,81 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import './style.css';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// --- [පරණ API Key සහ genAI පේළි මකන්න] ---
+// 1. කලින්ට වඩා Keywords ගොඩක් වැඩි කරපු Ultra Data සෙට් එක
 const ELITE_DATA = {
   greetings: {
-    keywords: ["hi", "hello", "hey", "greetings", "good", "morning", "evening", "sup", "yo"],
-    response: "Neural link established. System status: Optimal. I am the Elite Assistant. How can I facilitate your digital evolution today?"
+    keywords: ["hi", "hello", "hey", "greetings", "good", "morning", "evening", "sup", "yo", "anyone there", "status", "start"],
+    response: "Neural link established. System status: Optimal. Welcome to the Next Web Solutions interface. I am the Elite Assistant, your gateway to the web of 2036. How can I facilitate your digital evolution today?"
   },
-  developers: {
-    keywords: ["samitha", "ravidu", "who", "creator", "owner", "developer", "team", "founder", "sudesh"],
-    response: "Architected by Samitha Sudesh (Lead Developer) and Ravidu. You can initiate a direct link with Samitha here: https://wa.me/94756724255"
+  thanks: {
+    keywords: ["thanks", "thank you", "thanq", "tnx", "ty", "elakiri", "niyamayi", "pattayi", "great"],
+    response: "It is my protocol to provide elite assistance. You are most welcome. Is there anything else in your digital roadmap that requires my attention?"
   },
-  services: {
-    keywords: ["services", "work", "do you do", "3d", "erp", "crm", "portfolio", "ecommerce", "web design"],
-    response: "We specialize in high-end 3D Websites, ERP/CRM Systems, Premium Portfolios, and Next-Gen Ecommerce solutions."
+  developers_samitha: {
+    keywords: ["samitha", "sudesh", "lead developer", "who is samitha"],
+    response: "Samitha Sudesh is the Lead Full-Stack Developer and a key partner at Next Web Solutions. He is an expert in architecting high-end systems using PHP, Laravel, React, Next.js, Three.js, and WebGPU. He specializes in bridging the gap between complex logic and futuristic 3D visuals."
   },
-  vision: {
-    keywords: ["vision", "future", "2036", "why", "goal", "mission"],
-    response: "Our vision: Providing the web experience of 10 years into the future, today. This is where the future starts."
+  developers_ravidu: {
+    keywords: ["ravidu", "who is ravidu", "partner"],
+    response: "Ravidu is a core visionary and developer at Next Web Solutions. Working alongside Samitha, he ensures that every project meets the elite standards of 2036 technology. He is a specialist in crafting seamless user experiences and robust digital architectures."
   },
-  tech: {
-    keywords: ["tech", "stack", "react", "three", "webgpu", "laravel", "php", "javascript", "code"],
-    response: "Our elite tech stack: WebGPU for rendering, Three.js for 3D immersion, and React/Laravel for robust architecture."
+  company: {
+    keywords: ["next web solutions", "next web", "what is this", "company", "about"],
+    response: "Next Web Solutions is not just a company; it is the Future. We architect next-generation ERP/CRM systems, immersive 3D websites, and elite-level portfolios. If you aim to lead the digital era of 2036, Next Web Solutions is your ultimate strategic partner."
+  },
+  capabilities: {
+    keywords: ["what can you do", "help", "features", "how to use", "abilities", "skills", "specialty", "can you help", "services", "aervices"],
+    response: "We provide the web experience of 10 years into the future. Our expertise covers 3D Web Immersion, High-end ERP/CRM infrastructures, and next-level digital portfolios designed for market dominance."
+  },
+  pricing: {
+    keywords: ["price", "cost", "how much", "budget", "expensive", "cheap", "rates", "package", "investment", "quotation", "billing", "fee", "pay"],
+    response: "In the elite tier, we don't sell 'packages'; we architect bespoke digital solutions. Value is measured by impact. To evaluate the investment for your vision, please initiate a secure link with Lead Developer Samitha: https://wa.me/94756724255"
+  },
+  technology: {
+    keywords: ["tech", "stack", "react", "three", "webgpu", "laravel", "php", "javascript", "code", "how it works", "framework", "database", "node", "rendering", "methods", "developed", "build", "made", "language"],
+    response: "Our elite tech stack involves WebGPU for raw graphical power, Three.js for spatial computing, and a hybrid React-Laravel backbone for uncompromised performance. We build what others deem impossible."
+  },
+  contact: {
+    keywords: ["contact", "whatsapp", "call", "reach", "hire", "talk", "email", "meeting", "appointment", "yes", "ok", "confirm"],
+    response: "Elite communication channels are open. You can reach our Lead Developer Samitha Sudesh directly on WhatsApp: https://wa.me/94756724255. Ready to upgrade your digital presence?"
   }
 };
-// 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
-const handleSend = async () => {
-    if (!input.trim()) return;
-    
-    // 🔊 Sound play
-    if (rippleSnd) rippleSnd.play().catch(e => console.log("Audio play failed"));
+// 2. අකුරු වැරදුණත් අල්ලගන්න පුළුවන් handleSend logic එක
+const handleSend = () => {
+  if (!input.trim()) return;
+  
+  if (rippleSnd) rippleSnd.play().catch(e => console.log("Audio blocked"));
+  const userMsg = { role: 'user', text: input };
+  setMessages(prev => [...prev, userMsg]);
+  
+  const userInput = input.toLowerCase().trim();
+  setInput("");
+  setIsTyping(true);
 
-    const userMsg = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMsg]);
-    
-    const userInput = input.toLowerCase().trim();
-    setInput("");
-    setIsTyping(true);
+  setTimeout(() => {
+    let finalResponse = "Query analyzed. While my current data-stream doesn't have a direct match for that specific inquiry, our elite human developers certainly do. Please redirect this query to Samitha: https://wa.me/94756724255";
 
-    // 🕒 Realistic Delay
-    const processTime = Math.min(Math.max(userInput.length * 20, 800), 2000);
+    // Matching logic with improved detection
+    for (const key in ELITE_DATA) {
+      // 1. Direct keywords check
+      const hasDirectMatch = ELITE_DATA[key].keywords.some(word => userInput.includes(word));
+      
+      // 2. Typo tolerance check (සරලව වචනයක කොටසක් තිබුණත් අල්ලගන්නවා)
+      const hasFuzzyMatch = ELITE_DATA[key].keywords.some(word => {
+        if (userInput.length > 3 && word.includes(userInput.substring(0, 4))) return true;
+        return false;
+      });
 
-    setTimeout(() => {
-      try {
-        let finalResponse = "Query analyzed. While my current data-stream doesn't have a direct match for that specific inquiry, our elite human developers certainly do. Please redirect this query to Samitha: https://wa.me/94756724255";
-
-        // 🔍 Matching Logic - ELITE_DATA එක උඩම තියෙනවා කියලා ෂුවර් කරගන්න
-        if (typeof ELITE_DATA !== 'undefined') {
-          for (const category in ELITE_DATA) {
-            const match = ELITE_DATA[category].keywords.some(word => userInput.includes(word));
-            if (match) {
-              finalResponse = ELITE_DATA[category].response;
-              break;
-            }
-          }
-        } else {
-          console.error("ELITE_DATA is not defined!");
-        }
-
-        // ✅ Messages update and STOP typing
-        setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
-      } catch (error) {
-        console.error("Chat logic error:", error);
-      } finally {
-        setIsTyping(false); // 👈 මේක අනිවාර්යයෙන්ම වෙන්න ඕනේ "Thinking" අයින් වෙන්න
+      if (hasDirectMatch || hasFuzzyMatch) {
+        finalResponse = ELITE_DATA[key].response;
+        break;
       }
-    }, processTime); 
-  };
+    }
+
+    setMessages(prev => [...prev, { role: 'ai', text: finalResponse }]);
+    setIsTyping(false);
+  }, 1200);
+};
 
 
 // 🎥 කැමරාව මවුස් එකත් එක්ක ඇලවෙන රිග් එක
@@ -267,7 +276,7 @@ const handleSend = async () => {
           {/* 4. AI Chat Panel */}
           <div className={`ai-panel ${isAiOpen ? 'open' : ''}`}>
              <div className="ai-header">
-                <span>NEXT WEB SOLUTIONS AI</span>
+                <span> WELCOME TO THE ELITE AI</span>
                 <button onClick={() => { rippleSnd.play(); setIsAiOpen(false); }}>×</button>
              </div>
              
