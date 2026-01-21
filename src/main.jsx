@@ -8,7 +8,28 @@ import './style.css';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // --- [පරණ API Key සහ genAI පේළි මකන්න] ---
-
+const ELITE_DATA = {
+  greetings: {
+    keywords: ["hi", "hello", "hey", "greetings", "good", "morning", "evening", "sup", "yo"],
+    response: "Neural link established. System status: Optimal. I am the Elite Assistant. How can I facilitate your digital evolution today?"
+  },
+  developers: {
+    keywords: ["samitha", "ravidu", "who", "creator", "owner", "developer", "team", "founder", "sudesh"],
+    response: "Architected by Samitha Sudesh (Lead Developer) and Ravidu. You can initiate a direct link with Samitha here: https://wa.me/94756724255"
+  },
+  services: {
+    keywords: ["services", "work", "do you do", "3d", "erp", "crm", "portfolio", "ecommerce", "web design"],
+    response: "We specialize in high-end 3D Websites, ERP/CRM Systems, Premium Portfolios, and Next-Gen Ecommerce solutions."
+  },
+  vision: {
+    keywords: ["vision", "future", "2036", "why", "goal", "mission"],
+    response: "Our vision: Providing the web experience of 10 years into the future, today. This is where the future starts."
+  },
+  tech: {
+    keywords: ["tech", "stack", "react", "three", "webgpu", "laravel", "php", "javascript", "code"],
+    response: "Our elite tech stack: WebGPU for rendering, Three.js for 3D immersion, and React/Laravel for robust architecture."
+  }
+};
 // 🧠 Custom Elite Knowledge Base (API Key අවශ්‍ය නැත)
 const handleSend = async () => {
     if (!input.trim()) return;
