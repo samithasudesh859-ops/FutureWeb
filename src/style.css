@@ -78,29 +78,276 @@ body {
 }
 
 /* පැනල් එක පොඩි කරලා පැත්තකට ගමු */
+/* AI Panel එක වීදුරුවක් වගේ හදමු */
 .ai-panel {
   position: fixed;
-  right: 20px; /* දාරයේ ඉදන් පොඩි ඉඩක් */
-  bottom: 20px;
-  width: 320px; /* සයිස් එක අඩු කළා */
-  height: 450px; /* උස අඩු කළා */
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(15px); /* බ්ලර් එක පොඩ්ඩක් අඩු කළා */
+  right: 25px;
+  bottom: 25px;
+  width: 380px;
+  height: 550px;
+  background: rgba(10, 10, 15, 0.7); /* කළු වීදුරු පාටක් */
+  backdrop-filter: blur(25px) saturate(180%); /* Blur එක වැඩි කළා */
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px; /* රවුම් දාර */
-  transform: translateX(400px); /* මුලින් හංගලා */
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 1000;
-  padding: 20px;
+  border-radius: 30px; /* දාර වඩාත් රවුම් කළා */
+  padding: 30px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  z-index: 1000;
+  transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Header එකේ Font එක සහ Style එක */
+.ai-header {
+  font-family: 'Syncopate', sans-serif; /* Main Title එකේ Font එකම දැම්මා */
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Chat Messages වඩාත් පැහැදිලි කරමු */
+.ai-msg {
+  padding: 15px 20px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  font-family: 'Inter', sans-serif; /* කියවන්න ලේසි Font එකක් */
+  max-width: 85%;
+  margin-bottom: 15px;
+}
+
+.ai-msg.ai {
+  background: rgba(0, 242, 255, 0.05); /* ලාවට Cyan පාටක් */
+  color: #00f2ff;
+  border-left: 3px solid #00f2ff;
+  border-radius: 5px 20px 20px 20px;
+}
+
+.ai-msg.user {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  align-self: flex-end;
+  border-radius: 20px 20px 5px 20px;
+}
+
+/* Input Area එක සුපිරියට හදමු */
+.ai-input-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 5px 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.ai-input {
+  background: transparent !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 0.85rem;
+  padding: 12px 0;
+  width: 100%;
+}
+
+.send-btn {
+  background: #00f2ff !important;
+  color: #000 !important;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.3s;
+}
+
+.send-btn:hover {
+  transform: scale(1.1) rotate(-10deg);
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+}
+
+/* --- AI Panel Desktop & Mobile Base --- */
+/* --- AI Panel Base (Desktop & Mobile) --- */
+.ai-panel {
+    position: fixed !important;
+    right: 20px !important;
+    bottom: 20px !important;
+    
+    /* 📏 Size එක අඩු කළා */
+    width: 320px !important; 
+    height: 450px !important; 
+    max-height: 80vh !important;
+    max-width: calc(100vw - 40px) !important;
+
+    /* ✨ Glassmorphism */
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+    
+    display: flex !important;
+    flex-direction: column !important;
+    z-index: 99999 !important;
+    overflow: hidden !important;
+    
+    /* 🎬 Hide/Show Animation */
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(20px) scale(0.95) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* Open වුණාම පේන හැටි */
+.ai-panel.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) scale(1) !important;
+    pointer-events: all !important;
+}
+
+/* --- Header & Close Button --- */
+.ai-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 12px 18px !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.ai-header span {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    color: #00f2ff;
+}
+
+.close-btn {
+    background: none !important;
+    border: none !important;
+    color: #fff !important;
+    font-size: 22px !important;
+    cursor: pointer !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: 0.3s !important;
+}
+
+/* --- Chat Area (Scrollbar Hidden) --- */
+.ai-chat-area {
+    flex-grow: 1 !important;
+    overflow-y: auto !important;
+    padding: 15px !important;
+    scrollbar-width: none !important; /* Firefox */
+}
+.ai-chat-area::-webkit-scrollbar { display: none !important; }
+
+/* --- Messages --- */
+.ai-msg {
+    font-size: 0.75rem !important;
+    padding: 10px 14px !important;
+    margin-bottom: 10px !important;
+    border-radius: 12px !important;
+    max-width: 90% !important;
+    line-height: 1.4 !important;
+}
+
+/* --- 📱 Mobile Optimization --- */
+@media (max-width: 480px) {
+    .ai-panel {
+        right: 15px !important;
+        left: 15px !important;
+        bottom: 15px !important;
+        width: auto !important; /* Screen එකේ ඉඩට අනුව හැඩගැසේ */
+        height: 55vh !important; /* Keyboard එකට ඉඩ තැබීමට උස අඩු කළා */
+    }
+}
+
+/* --- Scrollbar එක සම්පූර්ණයෙන්ම මැකීම (The Fix) --- */
+.ai-chat-area {
+    flex-grow: 1 !important;
+    overflow-y: scroll !important; /* Scroll එක වැඩ කරන්න ඕනේ */
+    padding-right: 0px !important;
+    margin-right: -20px !important; /* Scrollbar එක දකුණට තල්ලු කරලා හංගනවා */
+    padding-bottom: 20px !important;
+    
+    /* Firefox සඳහා */
+    scrollbar-width: none !important;
+    /* IE/Edge සඳහා */
+    -ms-overflow-style: none !important;
+}
+
+/* Chrome/Safari/Brave සඳහා Scrollbar එක සම්පූර්ණයෙන්ම නොපෙනී යාමට */
+.ai-chat-area::-webkit-scrollbar {
+    width: 0px !important;
+    background: transparent !important;
+    display: none !important;
+}
+
+/* --- අකුරු පේන්නෙ නැති ප්‍රශ්නයට --- */
+.ai-msg {
+    font-family: 'Inter', sans-serif !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(5px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    padding: 12px !important;
+    margin: 10px 25px 10px 10px !important; /* දකුණු පැත්තෙන් ඉඩ තැබුවා */
+    border-radius: 15px !important;
+}
+
+/* --- Input Area එකත් Glass කරන්න --- */
+.ai-input-wrapper {
+    background: rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 15px !important;
+    border-radius: 0 0 28px 28px !important;
 }
 
 .ai-panel.open {
-  transform: translateX(0); /* ඕපන් වෙද්දී ලස්සනට ඇතුළට එනවා */
+  transform: translateX(0);
 }
 
+/* --- Mobile Specific Fixes --- */
+@media (max-width: 600px) {
+  .ai-panel {
+    right: 15px;
+    left: 15px; /* මැදට ගන්න */
+    bottom: 15px;
+    width: auto; /* Width එක auto කරලා left/right වලින් පාලනය කරනවා */
+    height: 60vh; /* ෆෝන් එකේදී උස පොඩ්ඩක් අඩු කළා Blob එක පේන්න */
+    padding: 15px;
+  }
+
+  .ai-header span {
+    font-size: 0.5rem; /* අකුරු තවත් පොඩි කළා */
+  }
+
+  .ai-msg {
+    font-size: 0.7rem; /* කියවන්න ලේසි වෙන්න message අකුරු හීනි කළා */
+    padding: 10px 12px;
+  }
+
+  /* Blob එක වැහෙන එක නතර කරන්න AI එක ඇරුණම Blob එක උඩට කරන ලොජික් එකක් CSS වලින් */
+  .canvas-container canvas {
+    transition: transform 0.5s ease;
+  }
+}
 .ai-header {
   font-weight: 700;
   color: #fff;

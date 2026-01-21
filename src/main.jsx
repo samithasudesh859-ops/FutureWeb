@@ -129,64 +129,49 @@ function Particles({ isTouching }) {
 function UltraBlob({ isAiOpen, isTouching }) {
   const meshRef = useRef();
   
-  // 🌍 1. Premium Environment Map Loading
+  // 1. Image එක load කරගැනීමේ ලොජික් එක විතරක් ඇඩ් කළා
   const textureLoader = useMemo(() => new THREE.TextureLoader(), []);
   const envMap = useMemo(() => {
-    const tex = textureLoader.load('/env.jpg'); 
+    const tex = textureLoader.load('/env.jpg'); // public/env.jpg ලෙස තිබිය යුතුය
     tex.mapping = THREE.EquirectangularReflectionMapping;
     return tex;
   }, [textureLoader]);
 
+  const targetDistort = useRef(0.6);
+  const targetScale = useRef(2.8);
+  const rippleSnd = useMemo(() => new Audio('/touch-sound.mp3'), []);
+
   useFrame((state) => {
+    const time = state.clock.getElapsedTime();
     if (meshRef.current) {
-      const { mouse, clock } = state;
-      const time = clock.getElapsedTime();
-
-      // 📍 2. Ultra-Smooth Parallax (වඩාත් සුමට ලෙස චලනය වීම)
-      const targetX = isAiOpen ? -2.5 : mouse.x * 2.5;
-      const targetY = mouse.y * 1.5;
-      meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, targetX, 0.03);
-      meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, targetY, 0.03);
-
-      // 💧 3. Liquid Physics Logic (වතුර ගතිය)
-      // ටච් කරද්දී Distortion එක ගොඩක් වැඩි වෙලා "කැලඹෙන වතුරක්" වගේ වෙනවා
-      const targetDistort = isTouching ? 1.4 : 0.4;
-      const targetSpeed = isTouching ? 10.0 : 3.0;
+      const targetX = isAiOpen ? -2.2 : state.mouse.x * 1.2;
+      const targetY = state.mouse.y * 0.8;
       
-      meshRef.current.distort = THREE.MathUtils.lerp(meshRef.current.distort, targetDistort, 0.05);
-      meshRef.current.speed = THREE.MathUtils.lerp(meshRef.current.speed, targetSpeed, 0.05);
+      meshRef.current.position.x = THREE.MathUtils.lerp(meshRef.current.position.x, targetX, 0.05);
+      meshRef.current.position.y = THREE.MathUtils.lerp(meshRef.current.position.y, targetY, 0.05);
+      
+      meshRef.current.distort = THREE.MathUtils.lerp(meshRef.current.distort, isTouching ? 1.5 : 0.6, 0.1);
+      const s = THREE.MathUtils.lerp(meshRef.current.scale.x, isTouching ? 3.2 : 2.8, 0.1);
+      meshRef.current.scale.set(s, s, s);
 
-      // 💓 4. Organic Pulse (හුස්ම ගන්නා ස්වරූපය)
-      const pulse = Math.sin(time * 1.5) * 0.08;
-      const baseScale = isTouching ? 3.4 : 3.0; 
-      const finalScale = THREE.MathUtils.lerp(meshRef.current.scale.x, baseScale + pulse, 0.1);
-      meshRef.current.scale.set(finalScale, finalScale, finalScale);
-
-      // 🔄 5. Multi-Axis Rotation
-      meshRef.current.rotation.y += 0.005;
-      meshRef.current.rotation.z = Math.sin(time * 0.4) * 0.2;
+      meshRef.current.rotation.z += 0.005;
+      meshRef.current.rotation.x = Math.sin(time * 0.3) * 0.2;
     }
   });
 
   return (
-    <Float speed={5} rotationIntensity={1.5} floatIntensity={2}>
-      <Sphere args={[1, 512, 512]} ref={meshRef}>
-        {/* ✨ Ultra Realistic Glass & Water Material */}
-        <MeshDistortMaterial
-          envMap={envMap}
-          envMapIntensity={2.5}     // පට්ටම එළියයි
-          color="#00f2ff"           // Cyan Base
-          transparent={true}        // විනිවිද පේන ගතිය
-          opacity={0.9}             // වීදුරු ගතියට අවශ්‍ය ප්‍රමාණය
-          roughness={0}             // සම්පූර්ණයෙන්ම සිනිඳුයි
-          metalness={0.9}           // Metallic Reflections
-          clearcoat={1}             // උඩින් ඇති තවත් ග්ලොසි තට්ටුවක්
-          clearcoatRoughness={0}
-          transmission={0.4}        // 💎 වීදුරු ඇතුළෙන් එළිය යන ගතිය (Glass Effect)
-          ior={1.5}                 // Index of Refraction (වීදුරු වල හැඩය)
-          thickness={2.0}           // වීදුරු තට්ටුවේ ඝනකම
-          distort={0.4}
-          speed={3}
+    <Float speed={3} rotationIntensity={1} floatIntensity={2}>
+      <Sphere args={[1, 256, 256]} ref={meshRef}>
+        <MeshDistortMaterial 
+          envMap={envMap}            // <--- ඉමේජ් එක ලින්ක් කළා
+          envMapIntensity={2.5}      // <--- Reflection එකේ දීප්තිය
+          color="#ffffff" 
+          speed={4} 
+          distort={0.6} 
+          radius={1} 
+          metalness={1} 
+          roughness={0.01} 
+          iridescence={1} 
         />
       </Sphere>
     </Float>
@@ -286,7 +271,7 @@ const handleSend = async () => {
             <Particles isTouching={isTouching} />
             <UltraBlob isAiOpen={isAiOpen} isTouching={isTouching} />
             <EffectComposer disableNormalPass>
-              <Bloom luminanceThreshold={1} intensity={1.5} />
+              <Bloom luminanceThreshold={1} intensity={0.5} />
             </EffectComposer>
           </>
         )}
@@ -305,7 +290,7 @@ const handleSend = async () => {
           {/* 4. AI Chat Panel */}
           <div className={`ai-panel ${isAiOpen ? 'open' : ''}`}>
              <div className="ai-header">
-                <span> WELCOME TO THE ELITE AI</span>
+                <span> welcome to the elite AI</span>
                 <button onClick={() => { rippleSnd.play(); setIsAiOpen(false); }}>×</button>
              </div>
              
